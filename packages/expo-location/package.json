@@ -1,5 +1,5 @@
 {
-  "name": "expo-location",
+  "name": "expo-location-fs-test",
   "version": "9.0.0",
   "description": "Allows reading geolocation information from the device. Your app can poll for the current location or subscribe to location update events.",
   "main": "build/Location.js",
@@ -26,11 +26,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/expo/expo.git",
+    "url": "https://github.com/abdullah-abunada/expo.git",
     "directory": "packages/expo-location"
   },
   "bugs": {
-    "url": "https://github.com/expo/expo/issues"
+    "url": "https://github.com/abdullah-abunada/expo/issues"
   },
   "author": "650 Industries, Inc.",
   "license": "MIT",
