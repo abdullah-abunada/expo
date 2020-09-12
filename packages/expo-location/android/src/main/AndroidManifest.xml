@@ -9,6 +9,7 @@
   <application>
     <service
       android:name=".services.LocationTaskService"
+      android:stopWithTask="true"
       android:exported="false" />
   </application>
 </manifest>
