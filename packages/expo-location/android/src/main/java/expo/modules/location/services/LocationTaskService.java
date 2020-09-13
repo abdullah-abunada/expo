@@ -42,13 +42,15 @@ public class LocationTaskService extends Service {
   @Override
   @TargetApi(26)
   public int onStartCommand(Intent intent, int flags, int startId) {
-    Bundle extras = intent.getExtras();
+    if(intent != null) {
+      Bundle extras = intent.getExtras();
 
-    if (extras != null) {
-      mChannelId = extras.getString("appId") + ":" + extras.getString("taskName");
+      if (extras != null) {
+        mChannelId = extras.getString("appId") + ":" + extras.getString("taskName");
+      }
+
+      return START_STICKY;
     }
-
-    return START_STICKY;
   }
 
   public void setParentContext(Context context) {
