@@ -61,7 +61,14 @@ public class LocationTaskService extends Service {
     stopForeground(true);
     stopSelf();
   }
-
+  
+  @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopForeground(true);
+        stopSelf();
+  }
+  
   public void startForeground(Bundle serviceOptions) {
     Notification notification = buildServiceNotification(serviceOptions);
     startForeground(mServiceId, notification);
