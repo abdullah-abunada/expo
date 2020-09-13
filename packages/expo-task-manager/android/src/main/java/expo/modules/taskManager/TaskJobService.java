@@ -7,10 +7,14 @@ import android.content.Context;
 public class TaskJobService extends JobService {
   @Override
   public boolean onStartJob(JobParameters params) {
-    Context context = getApplicationContext();
-    TaskService taskService = new TaskService(context);
+    try {
+      Context context = getApplicationContext();
+      TaskService taskService = new TaskService(context);
 
-    return taskService.handleJob(this, params);
+      return taskService.handleJob(this, params);
+    } catch (Exception e) {
+         return false;
+    }
   }
 
   @Override
