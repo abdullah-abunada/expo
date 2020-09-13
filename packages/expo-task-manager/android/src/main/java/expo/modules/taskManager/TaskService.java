@@ -366,72 +366,76 @@ public class TaskService implements SingletonModule, TaskServiceInterface {
   }
 
   public void executeTask(TaskInterface task, Bundle data, Error error, TaskExecutionCallback callback) {
-    
-    if(task == null) {
-      // it should never happen, just to suppress warnings :)
-      return;
-    } else { 
-      TaskManagerInterface taskManager = getTaskManager(task.getAppId());
-      Bundle body = createExecutionEventBody(task, data, error);
-      Bundle executionInfo = body.getBundle("executionInfo");
-
-      if (executionInfo == null) {
+    try{
+      if(task == null) {
         // it should never happen, just to suppress warnings :)
         return;
-      }
+      } else { 
+        TaskManagerInterface taskManager = getTaskManager(task.getAppId());
+        Bundle body = createExecutionEventBody(task, data, error);
+        Bundle executionInfo = body.getBundle("executionInfo");
 
-      String eventId = executionInfo.getString("eventId");
-      String appId = task.getAppId();
-
-      if (callback != null) {
-        sTaskCallbacks.put(eventId, callback);
-      }
-
-      final List<String> appEvents;
-      if (sEvents.get(appId) == null) {
-        appEvents = new ArrayList<>();
-        appEvents.add(eventId);
-        sEvents.put(appId, appEvents);
-      } else {
-        appEvents = new ArrayList<>();
-        appEvents.add(eventId);
-      }
-
-      if (taskManager != null) {
-        taskManager.executeTaskWithBody(body);
-        return;
-      }
-
-      // The app is not fully loaded as its task manager is not there yet.
-      // We need to add event's body to the queue from which events will be executed once the task manager is ready.
-      if (!mTasksAndEventsRepository.hasEvents(appId)) {
-        mTasksAndEventsRepository.putEvents(appId, new ArrayList<>());
-      }
-      mTasksAndEventsRepository.putEventForAppId(appId, body);
-
-      try {
-        getAppLoader().loadApp(mContextRef.get(), new HeadlessAppLoader.Params(appId, task.getAppUrl()), () -> {
-        }, success -> {
-          if (!success) {
-            sEvents.remove(appId);
-            mTasksAndEventsRepository.removeEvents(appId);
-
-            // Host unreachable? Unregister all tasks for that app.
-            unregisterAllTasksForAppId(appId);
-          }
-        });
-      } catch (HeadlessAppLoader.AppConfigurationError ignored) {
-        try {
-          unregisterTask(task.getName(), appId, null);
-        } catch (Exception e) {
-          Log.e(TAG, "Error occurred while unregistering invalid task.", e);
+        if (executionInfo == null) {
+          // it should never happen, just to suppress warnings :)
+          return;
         }
 
-        appEvents.remove(eventId);
-        mTasksAndEventsRepository.removeEvents(appId);
+        String eventId = executionInfo.getString("eventId");
+        String appId = task.getAppId();
+
+        if (callback != null) {
+          sTaskCallbacks.put(eventId, callback);
+        }
+
+        final List<String> appEvents;
+        if (sEvents.get(appId) == null) {
+          appEvents = new ArrayList<>();
+          appEvents.add(eventId);
+          sEvents.put(appId, appEvents);
+        } else {
+          appEvents = new ArrayList<>();
+          appEvents.add(eventId);
+        }
+
+        if (taskManager != null) {
+          taskManager.executeTaskWithBody(body);
+          return;
+        }
+
+        // The app is not fully loaded as its task manager is not there yet.
+        // We need to add event's body to the queue from which events will be executed once the task manager is ready.
+        if (!mTasksAndEventsRepository.hasEvents(appId)) {
+          mTasksAndEventsRepository.putEvents(appId, new ArrayList<>());
+        }
+        mTasksAndEventsRepository.putEventForAppId(appId, body);
+
+        try {
+          getAppLoader().loadApp(mContextRef.get(), new HeadlessAppLoader.Params(appId, task.getAppUrl()), () -> {
+          }, success -> {
+            if (!success) {
+              sEvents.remove(appId);
+              mTasksAndEventsRepository.removeEvents(appId);
+
+              // Host unreachable? Unregister all tasks for that app.
+              unregisterAllTasksForAppId(appId);
+            }
+          });
+        } catch (HeadlessAppLoader.AppConfigurationError ignored) {
+          try {
+            unregisterTask(task.getName(), appId, null);
+          } catch (Exception e) {
+            Log.e(TAG, "Error occurred while unregistering invalid task.", e);
+          }
+
+          appEvents.remove(eventId);
+          mTasksAndEventsRepository.removeEvents(appId);
+        }
+
       }
-    
+    } catch (Exception e) {
+         return false;
     }
+    
   }
 
   //endregion
