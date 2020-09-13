@@ -1,6 +1,6 @@
 {
-  "name": "expo-location-fs-test",
-  "version": "9.0.0",
+  "name": "@a.abunada/expo-location",
+  "version": "1.0.1",
   "description": "Allows reading geolocation information from the device. Your app can poll for the current location or subscribe to location update events.",
   "main": "build/Location.js",
   "types": "build/Location.d.ts",
@@ -26,14 +26,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/abdullah-abunada/expo.git",
+    "url": "git+https://github.com/abdullah-abunada/expo.git",
     "directory": "packages/expo-location"
   },
   "bugs": {
     "url": "https://github.com/abdullah-abunada/expo/issues"
   },
-  "author": "650 Industries, Inc.",
-  "license": "MIT",
+  "author": "a.abunada",
+  "license": "ISC",
   "homepage": "https://docs.expo.io/versions/latest/sdk/location/",
   "jest": {
     "preset": "expo-module-scripts"
@@ -45,5 +45,10 @@
   },
   "devDependencies": {
     "expo-module-scripts": "~1.2.0"
+  },
+  "dependencies": {
+    "@unimodules/core": "^5.3.0",
+    "unimodules-permissions-interface": "^5.2.1",
+    "unimodules-task-manager-interface": "^5.2.1"
   }
 }
