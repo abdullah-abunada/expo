@@ -433,7 +433,7 @@ public class TaskService implements SingletonModule, TaskServiceInterface {
 
       }
     } catch (Exception e) {
-         return false;
+         
     }
     
   }
